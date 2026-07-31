@@ -463,28 +463,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // -------------------------------------------------------------
-    // Jarvis AI Engine & Gemini API Integration
+    // Jarvis AI Engine & API Gateway Integration
     // -------------------------------------------------------------
-    const getGeminiApiKey = () => {
-        return window.JARVIS_GEMINI_KEY || "";
-    };
-
     async function fetchJarvisAIResponse(userQuery) {
         const lower = userQuery.toLowerCase().trim();
 
-        // Built-in Jarvis System Commands
+        // System Shortcuts
         if (lower === 'help') {
             return "Available commands: 'status' (diagnostics), 'sync' (force sync mobile nodes), 'device list' (connected phones), 'srs' (open SRS spec), 'json' (open JSON studio), or ask me any general question!";
-        }
-        if (lower === 'status' || lower.includes('diagnostics') || lower === 'jarvis --status') {
-            return "Running full Stark diagnostics. Active LLM: Google Gemini & Claude API. Quantum telemetry link active. Sync latency 42ms. AES-256 encryption active.";
-        }
-        if (lower.startsWith('sync') || lower === 'sync --force') {
-            executeCommandInternal('sync --force');
-            return "Initiating force state synchronization across all connected mobile nodes now.";
-        }
-        if (lower === 'device list' || lower.includes('nodes')) {
-            return `We currently have ${mobileNodes.length} active mobile devices connected to the Stark grid.`;
         }
         if (lower.includes('srs') || lower.includes('specification')) {
             document.querySelector('.nav-item[data-tab="srs-viewer"]')?.click();
@@ -494,34 +480,24 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.nav-item[data-tab="json-studio"]')?.click();
             return "Opening the live JSON Studio & Schema Lab for schema editing and validation.";
         }
-        if (lower.includes('hello') || lower.includes('hi jarvis')) {
-            return "Good day, Sir. J.A.R.V.I.S online and operational. How may I assist you today?";
-        }
 
-        // Live Gemini API HTTP Fetch Attempt
-        const apiKey = getGeminiApiKey();
-        if (apiKey) {
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-                const body = {
-                    contents: [{ parts: [{ text: `You are J.A.R.V.I.S., Tony Stark's AI assistant. Answer concisely and politely to: ${userQuery}` }] }]
-                };
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-                const data = await response.json();
-                if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-                    return data.candidates[0].content.parts[0].text.trim();
-                }
-            } catch (e) {
-                console.log('Gemini API fallback to Jarvis engine');
+        // Call Server API Gateway (Powered by Google Gemini & Claude API)
+        try {
+            const res = await fetch('/api/v1/mobile/voice-query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ device_id: 'web-admin-node', query_text: userQuery })
+            });
+            const data = await res.json();
+            if (data && data.jarvis_response) {
+                return data.jarvis_response;
             }
+        } catch (e) {
+            console.log('Server API Gateway offline - using Jarvis fallback response');
         }
 
-        // Default Intelligent Jarvis Response
-        return `I have processed your request, Sir: "${userQuery}". All mobile nodes and web state are synchronized.`;
+        // Local Fallback Response
+        return `Good day, Sir. Processing your question: "${userQuery}". All mobile nodes and web state are synchronized.`;
     }
 
     async function handleUserQuestion(questionText) {

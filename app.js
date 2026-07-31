@@ -443,44 +443,95 @@ document.addEventListener('DOMContentLoaded', () => {
         processJarvisVoiceCommand('force sync mobile nodes');
     });
 
-    function processJarvisVoiceCommand(query) {
-        const hudQuestionOutput = document.getElementById('hud-question-output');
-        const aiModelSelector = document.getElementById('ai-model-selector');
-        const selectedModel = aiModelSelector ? aiModelSelector.value : 'hybrid';
+    // -------------------------------------------------------------
+    // Jarvis AI Engine & Gemini API Integration
+    // -------------------------------------------------------------
+    const getGeminiApiKey = () => {
+        return window.JARVIS_GEMINI_KEY || "";
+    };
 
-        if (hudQuestionOutput) hudQuestionOutput.textContent = `"${query}"`;
+    async function fetchJarvisAIResponse(userQuery) {
+        const lower = userQuery.toLowerCase().trim();
 
-        const lower = query.toLowerCase();
-        let replyText = "";
-
-        let providerLabel = "Google Gemini & Claude API";
-        if (selectedModel === 'gemini') providerLabel = "Google Gemini API";
-        if (selectedModel === 'claude') providerLabel = "Anthropic Claude API";
-
-        if (lower.includes('hello') || lower.includes('hi jarvis')) {
-            replyText = `Good day, Sir. J.A.R.V.I.S online via ${providerLabel}. All mobile nodes nominal. How may I assist you?`;
-        } else if (lower.includes('status') || lower.includes('suit') || lower.includes('diagnostics')) {
-            replyText = `Running full Stark diagnostics. Active LLM: ${providerLabel}. Quantum telemetry link active. Sync latency 42ms. AES 256 active.`;
-        } else if (lower.includes('sync') || lower.includes('force')) {
-            replyText = "Right away, Sir. Initiating force quantum sync bus update across all mobile devices.";
-            executeCommand('sync --force');
-        } else if (lower.includes('device') || lower.includes('nodes') || lower.includes('mobile')) {
-            replyText = `We currently have ${mobileNodes.length} active mobile devices connected to the Stark grid.`;
-            executeCommand('device list');
-        } else if (lower.includes('srs') || lower.includes('specification')) {
-            replyText = "Displaying the Software Requirements Specification on the main holographic display.";
+        // Built-in Jarvis System Commands
+        if (lower === 'help') {
+            return "Available commands: 'status' (diagnostics), 'sync' (force sync mobile nodes), 'device list' (connected phones), 'srs' (open SRS spec), 'json' (open JSON studio), or ask me any general question!";
+        }
+        if (lower === 'status' || lower.includes('diagnostics') || lower === 'jarvis --status') {
+            return "Running full Stark diagnostics. Active LLM: Google Gemini & Claude API. Quantum telemetry link active. Sync latency 42ms. AES-256 encryption active.";
+        }
+        if (lower.startsWith('sync') || lower === 'sync --force') {
+            executeCommandInternal('sync --force');
+            return "Initiating force state synchronization across all connected mobile nodes now.";
+        }
+        if (lower === 'device list' || lower.includes('nodes')) {
+            return `We currently have ${mobileNodes.length} active mobile devices connected to the Stark grid.`;
+        }
+        if (lower.includes('srs') || lower.includes('specification')) {
             document.querySelector('.nav-item[data-tab="srs-viewer"]')?.click();
-        } else if (lower.includes('json') || lower.includes('schema')) {
-            replyText = "Opening the live JSON Studio & Schema Lab for schema editing and validation.";
+            return "Displaying the Software Requirements Specification on the main holographic display.";
+        }
+        if (lower.includes('json') || lower.includes('schema')) {
             document.querySelector('.nav-item[data-tab="json-studio"]')?.click();
-        } else {
-            replyText = `Processing your question, Sir: "${query}". Request routed via ${providerLabel}. State synced across mobile app and web admin panel.`;
-            addSyncLog('ai', '[J.A.R.V.I.S VOICE]', `Processed question via ${providerLabel}: "${query}"`);
+            return "Opening the live JSON Studio & Schema Lab for schema editing and validation.";
+        }
+        if (lower.includes('hello') || lower.includes('hi jarvis')) {
+            return "Good day, Sir. J.A.R.V.I.S online and operational. How may I assist you today?";
         }
 
-        // Output simultaneously on voice AND holographic question/answer cards!
-        typeWriterTerminalLine(`[J.A.R.V.I.S]: ${replyText}`, 'system-line');
-        speakJarvis(replyText);
+        // Live Gemini API HTTP Fetch Attempt
+        const apiKey = getGeminiApiKey();
+        if (apiKey) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+                const body = {
+                    contents: [{ parts: [{ text: `You are J.A.R.V.I.S., Tony Stark's AI assistant. Answer concisely and politely to: ${userQuery}` }] }]
+                };
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await response.json();
+                if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+                    return data.candidates[0].content.parts[0].text.trim();
+                }
+            } catch (e) {
+                console.log('Gemini API fallback to Jarvis engine');
+            }
+        }
+
+        // Default Intelligent Jarvis Response
+        return `I have processed your request, Sir: "${userQuery}". All mobile nodes and web state are synchronized.`;
+    }
+
+    async function handleUserQuestion(questionText) {
+        if (!questionText || !questionText.trim()) return;
+
+        const cleanQ = questionText.trim();
+
+        // 1. Update Holographic Question Display
+        const hudQuestionOutput = document.getElementById('hud-question-output');
+        const hudSubtitleOutput = document.getElementById('hud-subtitle-output');
+        
+        if (hudQuestionOutput) hudQuestionOutput.textContent = `"${cleanQ}"`;
+        if (hudSubtitleOutput) hudSubtitleOutput.textContent = `"Processing answer via Gemini AI..."`;
+
+        // 2. Print User Question in Terminal
+        appendTerminalLine(`[QUESTION]: "${cleanQ}"`, 'cmd-user');
+
+        // 3. Fetch Answer
+        const answerText = await fetchJarvisAIResponse(cleanQ);
+
+        // 4. Update HUD Subtitles, Terminal & Voice Synthesis
+        typeWriterTerminalLine(`[J.A.R.V.I.S]: ${answerText}`, 'system-line');
+        if (hudSubtitleOutput) hudSubtitleOutput.textContent = `"${answerText}"`;
+        addSyncLog('ai', '[J.A.R.V.I.S RESPONSE]', `Answered: "${cleanQ}"`);
+        speakJarvis(answerText);
+    }
+
+    function processJarvisVoiceCommand(query) {
+        handleUserQuestion(query);
     }
 
     // -------------------------------------------------------------
@@ -495,48 +546,13 @@ document.addEventListener('DOMContentLoaded', () => {
         terminalOutput.scrollTop = terminalOutput.scrollHeight;
     }
 
+    function executeCommandInternal(cmd) {
+        appendTerminalLine(`[SYSTEM COMMAND]: ${cmd}`, 'cmd-sync');
+    }
+
     function executeCommand(cmd) {
         if (!cmd.trim()) return;
-        appendTerminalLine(`jarvis@admin:~# ${cmd}`, 'cmd-user');
-
-        const cleanCmd = cmd.trim().toLowerCase();
-
-        if (cleanCmd === 'help') {
-            appendTerminalLine('Available Commands:', 'cmd-sync');
-            appendTerminalLine('  sync --force             : Force trigger bidirectional state sync across all nodes');
-            appendTerminalLine('  device list              : Display summary of active mobile nodes');
-            appendTerminalLine('  trigger-mobile --notify  : Push test notification payload to mobile app');
-            appendTerminalLine('  jarvis --status          : Show system core stats & LLM engine load');
-            appendTerminalLine('  clear                    : Clear terminal screen');
-        } else if (cleanCmd === 'clear') {
-            terminalOutput.innerHTML = '';
-        } else if (cleanCmd.startsWith('sync')) {
-            appendTerminalLine('[SYNC ENGINE] Broadcasting force sync pulse to 3 active mobile nodes...', 'cmd-sync');
-            addSyncLog('web', '[WEB→MOBILE]', 'Admin triggered manual sync pulse to all client nodes');
-            setTimeout(() => {
-                appendTerminalLine('[SYNC ACK] All 3 mobile nodes acknowledged sync pulse in 38ms.', 'system-line');
-            }, 600);
-        } else if (cleanCmd.startsWith('device list')) {
-            appendTerminalLine(`Active Nodes Count: ${mobileNodes.length}`, 'cmd-output');
-            mobileNodes.forEach(n => {
-                appendTerminalLine(` -> [${n.id}] ${n.name} | ${n.platform} | Status: ${n.status}`, 'cmd-output');
-            });
-        } else if (cleanCmd.includes('notify') || cleanCmd.startsWith('trigger-mobile')) {
-            appendTerminalLine('[PUSH NOTIFY] Pushing notification payload to active mobile apps...', 'cmd-sync');
-            addSyncLog('web', '[WEB→MOBILE]', 'Admin pushed push notification: "Meeting in 10 mins"');
-            setTimeout(() => {
-                appendTerminalLine('[MOBILE ACK] Received push confirmation from iPhone 15 Pro and Pixel 8 Pro', 'system-line');
-            }, 800);
-        } else if (cleanCmd.startsWith('jarvis')) {
-            appendTerminalLine('JARVIS Core Status: ONLINE', 'system-line');
-            appendTerminalLine(' - Active Workers: 8 Threads', 'cmd-output');
-            appendTerminalLine(' - LLM Engine: Dual Provider (Google Gemini + Claude API via .env)', 'cmd-output');
-            appendTerminalLine(' - API Auth Status: Authenticated (Keys Loaded)', 'system-line');
-            appendTerminalLine(' - Average Latency: 42ms', 'cmd-output');
-        } else {
-            appendTerminalLine(`Command executed: ${cmd}. Processing AI workflow...`, 'cmd-output');
-            addSyncLog('ai', '[JARVIS AI]', `Executed terminal command payload: "${cmd}"`);
-        }
+        handleUserQuestion(cmd);
     }
 
     terminalSendBtn?.addEventListener('click', () => {

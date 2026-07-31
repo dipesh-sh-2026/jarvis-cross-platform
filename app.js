@@ -116,6 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             const target = document.getElementById(targetSubpane);
             if (target) target.classList.add('active');
+
+            // Force Re-render to ensure outputs are 100% populated
+            renderDashboardSyncFeed();
+            renderFullSyncStream();
+            renderFullNodesGrid();
         });
     });
 
@@ -529,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const hudSubtitleOutput = document.getElementById('hud-subtitle-output');
         
         if (hudQuestionOutput) hudQuestionOutput.textContent = `"${cleanQ}"`;
-        if (hudSubtitleOutput) hudSubtitleOutput.textContent = `"Processing answer via Gemini AI..."`;
+        if (hudSubtitleOutput) hudSubtitleOutput.textContent = `"Processing answer via AI..."`;
 
         // 2. Print User Question in Terminal
         appendTerminalLine(`[QUESTION]: "${cleanQ}"`, 'cmd-user');
@@ -537,10 +542,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // 3. Fetch Answer
         const answerText = await fetchJarvisAIResponse(cleanQ);
 
-        // 4. Update HUD Subtitles, Terminal & Voice Synthesis
-        typeWriterTerminalLine(`[J.A.R.V.I.S]: ${answerText}`, 'system-line');
+        // 4. Update HUD Subtitles, Terminal & Feed Logs
         if (hudSubtitleOutput) hudSubtitleOutput.textContent = `"${answerText}"`;
+        typeWriterTerminalLine(`[J.A.R.V.I.S]: ${answerText}`, 'system-line');
         addSyncLog('ai', '[J.A.R.V.I.S RESPONSE]', `Answered: "${cleanQ}"`);
+
+        // Force output feeds to re-render immediately
+        renderDashboardSyncFeed();
+        renderFullSyncStream();
+
         speakJarvis(answerText);
     }
 

@@ -1,4 +1,4 @@
-name: Build Android APK & Sync Web Admin
+name: Build Android APK Package & Release
 
 on:
   push:
@@ -16,12 +16,12 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js Environment
+      - name: Setup Node.js 22 Environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
-      - name: Install Project Dependencies
+      - name: Install Dependencies
         run: |
           npm install
 
@@ -34,23 +34,16 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Build Web App & Copy Mobile Assets
+      - name: Sync Capacitor Android Project
         run: |
-          mkdir -p www
-          cp -r mobile_app/* www/
-          cp -r *.html *.css *.js www/ 2>/dev/null || true
-
-      - name: Initialize Capacitor Android Project
-        run: |
-          npx @capacitor/cli init "Jarvis Assistant" "com.jarvis.app" --web-dir "mobile_app"
-          npx @capacitor/cli add android
-          npx @capacitor/cli sync android
+          npx cap add android || true
+          npx cap sync android
 
       - name: Build Android APK Package (Gradle)
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4

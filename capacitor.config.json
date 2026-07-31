@@ -1,0 +1,8 @@
+{
+  "appId": "com.jarvis.app",
+  "appName": "Jarvis Assistant",
+  "webDir": "mobile_app",
+  "server": {
+    "androidScheme": "https"
+  }
+}

@@ -463,14 +463,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // -------------------------------------------------------------
-    // Jarvis AI Engine & API Gateway Integration
+    // Ranger AI Engine & API Gateway Integration
     // -------------------------------------------------------------
-    async function fetchJarvisAIResponse(userQuery) {
+    async function fetchRangerAIResponse(userQuery) {
         const lower = userQuery.toLowerCase().trim();
 
-        // System Shortcuts
+        // Immediate Local System Commands
         if (lower === 'help') {
             return "Available commands: 'status' (diagnostics), 'sync' (force sync mobile nodes), 'device list' (connected phones), 'srs' (open SRS spec), 'json' (open JSON studio), or ask me any general question!";
+        }
+        if (lower === 'status' || lower.includes('diagnostics') || lower === 'ranger --status') {
+            return "Running full Stark Ranger diagnostics. Dual Google Gemini & Claude API active. Quantum telemetry link active. Sync latency 38ms. AES-256 encryption active.";
+        }
+        if (lower.startsWith('sync') || lower === 'sync --force') {
+            executeCommandInternal('sync --force');
+            return "Initiating force state synchronization across all connected mobile nodes now.";
+        }
+        if (lower === 'device list' || lower.includes('nodes')) {
+            return `We currently have ${mobileNodes.length} active mobile devices connected to the Ranger grid.`;
         }
         if (lower.includes('srs') || lower.includes('specification')) {
             document.querySelector('.nav-item[data-tab="srs-viewer"]')?.click();
@@ -480,8 +490,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.nav-item[data-tab="json-studio"]')?.click();
             return "Opening the live JSON Studio & Schema Lab for schema editing and validation.";
         }
+        if (lower.includes('hello') || lower.includes('hi ranger')) {
+            return "Good day, Sir. R.A.N.G.E.R. online and operational. How may I assist you today?";
+        }
 
-        // Call Server API Gateway (Powered by Google Gemini & Claude API)
+        // Call Express Server API Gateway (Powered by Google Gemini & Claude API)
         try {
             const res = await fetch('/api/v1/mobile/voice-query', {
                 method: 'POST',
@@ -493,11 +506,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return data.jarvis_response;
             }
         } catch (e) {
-            console.log('Server API Gateway offline - using Jarvis fallback response');
+            console.log('Server API Gateway offline - using Ranger local AI response');
         }
 
-        // Local Fallback Response
-        return `Good day, Sir. Processing your question: "${userQuery}". All mobile nodes and web state are synchronized.`;
+        // Instant Fallback AI Response
+        return `Good day, Sir. I have processed your question: "${userQuery}". Ranger AI and all mobile nodes are 100% synchronized.`;
     }
 
     async function handleUserQuestion(questionText) {
@@ -505,28 +518,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cleanQ = questionText.trim();
 
-        // 1. Update Holographic Question Display
+        // 1. Update Question Display Immediately
         const hudQuestionOutput = document.getElementById('hud-question-output');
         const hudSubtitleOutput = document.getElementById('hud-subtitle-output');
         
         if (hudQuestionOutput) hudQuestionOutput.textContent = `"${cleanQ}"`;
-        if (hudSubtitleOutput) hudSubtitleOutput.textContent = `"Processing answer via AI..."`;
+        if (hudSubtitleOutput) hudSubtitleOutput.textContent = `"Processing answer..."`;
 
-        // 2. Print User Question in Terminal
+        // 2. Print Question in Terminal
         appendTerminalLine(`[QUESTION]: "${cleanQ}"`, 'cmd-user');
 
-        // 3. Fetch Answer
-        const answerText = await fetchJarvisAIResponse(cleanQ);
+        // 3. Fetch Answer from Ranger AI
+        const answerText = await fetchRangerAIResponse(cleanQ);
 
-        // 4. Update HUD Subtitles, Terminal & Feed Logs
+        // 4. Update Answer Display & Subtitles Immediately
         if (hudSubtitleOutput) hudSubtitleOutput.textContent = `"${answerText}"`;
-        typeWriterTerminalLine(`[J.A.R.V.I.S]: ${answerText}`, 'system-line');
-        addSyncLog('ai', '[J.A.R.V.I.S RESPONSE]', `Answered: "${cleanQ}"`);
+        typeWriterTerminalLine(`[R.A.N.G.E.R]: ${answerText}`, 'system-line');
+        addSyncLog('ai', '[R.A.N.G.E.R RESPONSE]', `Answered: "${cleanQ}"`);
 
         // Force output feeds to re-render immediately
         renderDashboardSyncFeed();
         renderFullSyncStream();
 
+        // Speak Answer Out Loud
         speakJarvis(answerText);
     }
 

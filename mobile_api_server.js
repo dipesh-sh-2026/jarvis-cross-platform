@@ -110,7 +110,7 @@ app.post('/api/v1/mobile/voice-query', async (req, res) => {
     if (lower === 'status' || lower.includes('diagnostics')) {
         return res.json({
             success: true,
-            jarvis_response: "Running full Stark diagnostics. Dual Google Gemini & Claude API active. Latency 38ms. AES-256 encryption active.",
+            jarvis_response: "Running full Stark diagnostics. Dual Google Gemini & Claude API active. Ranger server latency 38ms. AES-256 encryption active.",
             provider: "System Diagnostics"
         });
     }
@@ -131,7 +131,7 @@ app.post('/api/v1/mobile/voice-query', async (req, res) => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `You are J.A.R.V.I.S., Tony Stark's intelligent AI assistant. Give a clear, helpful, concise answer to: ${query_text}` }] }]
+                    contents: [{ parts: [{ text: `You are RANGER (formerly Jarvis), Tony Stark's intelligent AI assistant. Give a clear, helpful, concise answer to: ${query_text}` }] }]
                 })
             });
             const data = await fetchRes.json();
@@ -155,8 +155,8 @@ app.post('/api/v1/mobile/voice-query', async (req, res) => {
         success: true,
         device_id: device_id || "node-web-admin",
         user_query: query_text,
-        jarvis_response: `Processing your question, Sir: "${query_text}". All mobile nodes and web state are synchronized.`,
-        provider: "Jarvis Core Engine"
+        jarvis_response: `Processing your question, Sir: "${query_text}". All mobile nodes and web state are synchronized with Ranger AI.`,
+        provider: "Ranger Core Engine"
     });
 });
 

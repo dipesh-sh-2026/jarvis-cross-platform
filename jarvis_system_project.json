@@ -1,10 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "project_metadata": {
-    "name": "JARVIS Cross-Platform AI Assistant",
+    "name": "RANGER Cross-Platform AI Assistant",
     "codename": "Stark OS Mark-LXXXV",
     "version": "2.4.0",
-    "description": "Cross-platform AI assistant ecosystem connecting mobile clients (iOS/Android) with real-time state synchronization, J.A.R.V.I.S. HUD voice interface, and Web Admin Panel.",
+    "description": "Cross-platform AI assistant ecosystem connecting mobile clients (iOS/Android) with real-time state synchronization, R.A.N.G.E.R. HUD voice interface, and Web Admin Panel.",
     "created_at": "2026-07-31T11:11:00Z",
     "license": "MIT"
   },

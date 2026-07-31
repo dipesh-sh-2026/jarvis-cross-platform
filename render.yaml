@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: jarvis-ai-ecosystem
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: node mobile_api_server.js
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: GOOGLE_GEMINI_API_KEY
+        sync: false
+      - key: CLAUDE_API_KEY
+        sync: false

@@ -331,6 +331,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const jarvisInteractiveHud = document.getElementById('jarvis-interactive-hud');
     const hudSubtitleOutput = document.getElementById('hud-subtitle-output');
     const hudStatusText = document.getElementById('hud-status-text');
+    const btnJarvisWake = document.getElementById('btn-jarvis-wake');
+    const wakeBtnText = document.getElementById('wake-btn-text');
+    const arcReactorMain = document.getElementById('main-arc-reactor');
+    const arcReactorTrigger = document.getElementById('arc-reactor-trigger');
+    const hudVisualizer = document.getElementById('hud-visualizer');
 
     function speakJarvis(text) {
         if (!('speechSynthesis' in window)) return;
@@ -348,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Try selecting British / Sophisticated Male Voice if available
         const voices = window.speechSynthesis.getVoices();
-        const jarvisVoice = voices.find(v => 
+        const jarvisVoice = voices.find(v =>
             (v.name.includes('British') || v.name.includes('UK') || v.name.includes('Daniel') || v.name.includes('George') || v.name.includes('Google UK English Male')) && v.lang.startsWith('en')
         ) || voices.find(v => v.lang.startsWith('en'));
 
@@ -457,9 +462,24 @@ document.addEventListener('DOMContentLoaded', () => {
     btnHudMicTalk?.addEventListener('click', triggerJarvisListening);
     jarvisInteractiveHud?.addEventListener('click', triggerJarvisListening);
 
-    btnHudQuickSync?.addEventListener('click', () => {
-        executeCommand('sync --force');
-        processJarvisVoiceCommand('force sync mobile nodes');
+    // Section 1 HUD Input & Button Handlers
+    const hudVoiceInput = document.getElementById('hud-voice-input');
+    const btnHudSendText = document.getElementById('btn-hud-send-text');
+
+    function submitHudQuestion() {
+        if (hudVoiceInput && hudVoiceInput.value.trim()) {
+            const query = hudVoiceInput.value.trim();
+            hudVoiceInput.value = '';
+            handleUserQuestion(query);
+        }
+    }
+
+    btnHudSendText?.addEventListener('click', submitHudQuestion);
+    hudVoiceInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            submitHudQuestion();
+        }
     });
 
     // -------------------------------------------------------------
@@ -521,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Update Question Display Immediately
         const hudQuestionOutput = document.getElementById('hud-question-output');
         const hudSubtitleOutput = document.getElementById('hud-subtitle-output');
-        
+
         if (hudQuestionOutput) hudQuestionOutput.textContent = `"${cleanQ}"`;
         if (hudSubtitleOutput) hudSubtitleOutput.textContent = `"Processing answer..."`;
 
@@ -640,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modalConfirmBtn?.addEventListener('click', () => {
         const nameInput = document.getElementById('manual-device-name');
         const newName = nameInput.value.trim() || `New Mobile Node #${mobileNodes.length + 1}`;
-        
+
         mobileNodes.push({
             id: `node-m${mobileNodes.length + 1}`,
             name: newName,
@@ -790,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (const key in item) {
                     const val = item[key];
                     const line = document.createElement('div');
-                    
+
                     if (typeof val === 'object' && val !== null) {
                         line.innerHTML = `<span class="tree-key">"${key}"</span>: {`;
                         ul.appendChild(line);

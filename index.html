@@ -142,13 +142,23 @@
                             </div>
                         </div>
 
-                        <!-- Quick Voice Input Bar & Action Buttons -->
+                        <!-- Quick Voice & Text Question Input Bar -->
+                        <div class="hud-input-container">
+                            <div class="hud-input-wrapper">
+                                <input type="text" id="hud-voice-input" placeholder="Type your question here or tap microphone..." autocomplete="off">
+                                <button class="btn btn-primary" id="btn-hud-send-text" title="Send Question">
+                                    <i class="fa-solid fa-paper-plane"></i> Send
+                                </button>
+                                <button class="btn btn-secondary glow-btn-stark" id="btn-hud-mic-talk" title="Click to Speak Voice Question">
+                                    <i class="fa-solid fa-microphone"></i> Mic
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Action Control Buttons -->
                         <div class="hud-action-bar">
-                            <button class="btn btn-primary glow-btn-stark btn-lg" id="btn-hud-mic-talk">
-                                <i class="fa-solid fa-microphone"></i> ASK VOICE QUESTION
-                            </button>
-                            <button class="btn btn-secondary btn-lg" id="btn-hud-quick-sync">
-                                <i class="fa-solid fa-arrows-rotate"></i> FORCE SYNC MOBILE
+                            <button class="btn btn-secondary btn-sm" id="btn-hud-quick-sync">
+                                <i class="fa-solid fa-arrows-rotate"></i> Force Sync Mobile Nodes
                             </button>
                         </div>
                     </div>

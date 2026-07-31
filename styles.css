@@ -220,6 +220,37 @@ body {
 }
 
 /* User profile */
+.hud-input-container {
+    width: 100%;
+    max-width: 680px;
+    margin: 16px auto 12px auto;
+}
+
+.hud-input-wrapper {
+    display: flex;
+    gap: 8px;
+    background: rgba(10, 15, 26, 0.85);
+    padding: 6px 8px;
+    border-radius: 30px;
+    border: 1px solid var(--primary-cyan);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.25);
+}
+
+.hud-input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    padding: 8px 16px;
+}
+
+.hud-input-wrapper input::placeholder {
+    color: var(--text-muted);
+}
+
 .user-profile {
     display: flex;
     align-items: center;

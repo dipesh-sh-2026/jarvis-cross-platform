@@ -151,30 +151,71 @@ app.post('/api/v1/mobile/voice-query', async (req, res) => {
         });
     }
 
-    // Try Live Google Gemini API Request Server-Side
-    const geminiKey = process.env.GOOGLE_GEMINI_API_KEY;
-    if (geminiKey && geminiKey.length > 5) {
+    // Main Answer Engine: TinyFish Web Search (context) + Groq LLM (answer synthesis)
+    const tinyfishKey = process.env.TINYFISH_API_KEY;
+    const groqKey = process.env.GROQ_API_KEY;
+
+    if (groqKey && groqKey.length > 5) {
         try {
-            const fetchRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+            // 1. Gather live web context via TinyFish Search (optional, best-effort)
+            let searchContext = '';
+            if (tinyfishKey && tinyfishKey.length > 5) {
+                try {
+                    const searchRes = await fetch(`https://api.search.tinyfish.ai?query=${encodeURIComponent(query_text)}`, {
+                        method: 'GET',
+                        headers: { 'X-API-Key': tinyfishKey }
+                    });
+                    const searchData = await searchRes.json();
+                    if (searchData.results && searchData.results.length > 0) {
+                        searchContext = searchData.results
+                            .slice(0, 3)
+                            .map((r, i) => `[${i + 1}] ${r.title}: ${r.snippet} (${r.url})`)
+                            .join('\n');
+                    } else {
+                        console.error('[TINYFISH API ERROR] Status:', searchRes.status, 'Body:', JSON.stringify(searchData));
+                    }
+                } catch (err) {
+                    console.error('[TINYFISH API ERROR]', err.message);
+                }
+            }
+
+            // 2. Ask Groq to synthesize a direct, conversational answer
+            const systemPrompt = "You are R.A.N.G.E.R, Tony Stark's intelligent AI assistant. Give clear, concise, direct spoken answers. Use the provided web search context if it's relevant, but rely on your own knowledge if the context is empty or unhelpful.";
+            const userPrompt = searchContext
+                ? `Web search context:\n${searchContext}\n\nQuestion: ${query_text}`
+                : `Question: ${query_text}`;
+
+            const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${groqKey}`
+                },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `You are RANGER, Tony Stark's intelligent AI assistant. Give a clear, concise, direct answer to: ${query_text}` }] }]
+                    model: 'openai/gpt-oss-120b',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: userPrompt }
+                    ],
+                    reasoning_format: 'hidden'
                 })
             });
-            const data = await fetchRes.json();
-            if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-                const aiText = data.candidates[0].content.parts[0].text.trim();
+            const groqData = await groqRes.json();
+            const aiText = groqData.choices?.[0]?.message?.content?.trim();
+
+            if (aiText) {
                 return res.json({
                     success: true,
                     device_id: device_id || "node-web-admin",
                     user_query: query_text,
                     jarvis_response: aiText,
-                    provider: "Google Gemini 1.5 Flash"
+                    provider: searchContext ? "TinyFish Search + Groq" : "Groq"
                 });
+            } else {
+                console.error('[GROQ API ERROR] Status:', groqRes.status, 'Body:', JSON.stringify(groqData));
             }
         } catch (err) {
-            console.error('[GEMINI API ERROR]', err.message);
+            console.error('[GROQ API ERROR]', err.message);
         }
     }
 

@@ -77,15 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Page Tab Subtitles
     const tabMeta = {
-        'dashboard': { title: 'Control Dashboard', subtitle: 'Real-time telemetry and cross-platform synchronization overview' },
-        'sync-monitor': { title: 'Live Sync Protocol Stream', subtitle: 'Bi-directional WebSocket packet inspection between Mobile and Web' },
-        'mobile-nodes': { title: 'Registered Mobile Nodes', subtitle: 'Manage connected iOS and Android clients with E2EE authentication' },
-        'terminal': { title: 'AI Terminal & Remote Execution', subtitle: 'Issue live Jarvis commands and inspect server-side trigger results' },
-        'srs-viewer': { title: 'Software Requirements Specification', subtitle: 'Formal system specs & cross-platform synchronization document' }
+        'section-voice-talk': { title: '1. Voice Talk & Answer', subtitle: 'Interactive J.A.R.V.I.S speech HUD with real-time Question & Answer displays' },
+        'section-live-output': { title: '2. Live Output & System Data', subtitle: 'Unified telemetry logs, mobile devices, AI terminal, JSON Studio, and API explorer' }
     };
 
     // -------------------------------------------------------------
-    // Tab Navigation Handler
+    // Main 2-Section Navigation Handler
     // -------------------------------------------------------------
     navItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -102,6 +99,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 pageTitle.textContent = tabMeta[targetTab].title;
                 pageSubtitle.textContent = tabMeta[targetTab].subtitle;
             }
+        });
+    });
+
+    // Section 2 Subnav Handler
+    const subnavBtns = document.querySelectorAll('.subnav-btn');
+    const subpanes = document.querySelectorAll('.subpane');
+
+    subnavBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetSubpane = btn.getAttribute('data-subpane');
+
+            subnavBtns.forEach(b => b.classList.remove('active'));
+            subpanes.forEach(p => p.classList.remove('active'));
+
+            btn.classList.add('active');
+            const target = document.getElementById(targetSubpane);
+            if (target) target.classList.add('active');
         });
     });
 

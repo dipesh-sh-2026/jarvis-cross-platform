@@ -28,42 +28,15 @@
             </div>
 
             <nav class="nav-menu">
-                <button class="nav-item active" data-tab="jarvis-hud">
-                    <i class="fa-solid fa-circle-nodes"></i>
-                    <span>J.A.R.V.I.S. HUD Screen</span>
-                    <span class="badge pulse-badge" style="background: rgba(0, 229, 255, 0.2); color: var(--primary-cyan);">ACTIVE</span>
+                <button class="nav-item active" data-tab="section-voice-talk">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    <span>1. Voice Talk & Answer</span>
+                    <span class="badge pulse-badge" style="background: rgba(0, 229, 255, 0.2); color: var(--primary-cyan);">VOICE</span>
                 </button>
-                <button class="nav-item" data-tab="dashboard">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Control Dashboard</span>
-                </button>
-                <button class="nav-item" data-tab="sync-monitor">
-                    <i class="fa-solid fa-arrows-rotate"></i>
-                    <span>Live Sync Stream</span>
-                    <span class="badge pulse-badge" id="sync-count-badge">LIVE</span>
-                </button>
-                <button class="nav-item" data-tab="mobile-nodes">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                    <span>Mobile Nodes</span>
-                    <span class="node-count" id="active-nodes-badge">3</span>
-                </button>
-                <button class="nav-item" data-tab="terminal">
-                    <i class="fa-solid fa-terminal"></i>
-                    <span>AI Terminal & Exec</span>
-                </button>
-                <button class="nav-item" data-tab="srs-viewer">
-                    <i class="fa-solid fa-file-contract"></i>
-                    <span>SRS Document</span>
-                </button>
-                <button class="nav-item" data-tab="json-studio">
-                    <i class="fa-solid fa-code"></i>
-                    <span>JSON Studio & Schemas</span>
-                    <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber);">JSON</span>
-                </button>
-                <button class="nav-item" data-tab="mobile-api">
-                    <i class="fa-solid fa-plug"></i>
-                    <span>Mobile API & SDK</span>
-                    <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald);">API</span>
+                <button class="nav-item" data-tab="section-live-output">
+                    <i class="fa-solid fa-desktop"></i>
+                    <span>2. Live Output & Data</span>
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald);">OUTPUT</span>
                 </button>
             </nav>
 
@@ -127,13 +100,15 @@
                 </div>
             </header>
 
-            <!-- TAB 0: J.A.R.V.I.S. HOLOGRAPHIC HUD SCREEN (MATCHING USER IMAGE) -->
-            <section class="tab-pane active" id="tab-jarvis-hud">
+            <!-- ==========================================================================
+                 SECTION 1: VOICE TALK & ANSWER (PURE SPEECH & Q&A INTERFACE)
+                 ========================================================================== -->
+            <section class="tab-pane active" id="tab-section-voice-talk">
                 <div class="jarvis-fullscreen-hud">
                     <div class="hud-scanline-overlay"></div>
                     <div class="hud-vignette"></div>
 
-                    <!-- Holographic Concentric Rings HUD (Exact Match to Reference Image) -->
+                    <!-- Holographic Concentric Rings Arc Reactor HUD -->
                     <div class="jarvis-center-hud-container" id="jarvis-interactive-hud">
                         <div class="hud-ring-layer ring-outer-dashed"></div>
                         <div class="hud-ring-layer ring-outer-ticks"></div>
@@ -152,22 +127,22 @@
                     <div class="jarvis-speech-panel">
                         <div class="jarvis-status-indicator" id="jarvis-status-indicator">
                             <span class="status-pulse-dot"></span>
-                            <span id="hud-status-text">ONLINE & READY • SPEAK OR TYPE YOUR QUESTION</span>
+                            <span id="hud-status-text">SECTION 1: VOICE TALK READY • TAP HUD OR SPEAK</span>
                         </div>
 
-                        <!-- Dynamic Holographic Question & Answer Display -->
+                        <!-- Question & Answer Display Cards -->
                         <div class="jarvis-qa-container">
                             <div class="qa-box question-card" id="hud-question-card">
                                 <div class="qa-label"><i class="fa-solid fa-circle-question cyan-text"></i> YOUR QUESTION:</div>
-                                <div class="qa-text" id="hud-question-output">"How is the cross-platform sync working, Jarvis?"</div>
+                                <div class="qa-text" id="hud-question-output">"How is our mobile and website system syncing working, Jarvis?"</div>
                             </div>
                             <div class="qa-box answer-card" id="hud-answer-card">
-                                <div class="qa-label"><i class="fa-solid fa-robot emerald-text"></i> J.A.R.V.I.S. RESPONSE:</div>
-                                <div class="qa-text" id="hud-subtitle-output">"Good day, Sir. All 3 mobile nodes are synchronized with sub-42ms latency and AES-256 encryption active."</div>
+                                <div class="qa-label"><i class="fa-solid fa-robot emerald-text"></i> J.A.R.V.I.S. ANSWER:</div>
+                                <div class="qa-text" id="hud-subtitle-output">"Good day, Sir. All mobile nodes and web state are synchronized with sub-42ms latency and AES-256 encryption active."</div>
                             </div>
                         </div>
 
-                        <!-- Action Control Buttons -->
+                        <!-- Quick Voice Input Bar & Action Buttons -->
                         <div class="hud-action-bar">
                             <button class="btn btn-primary glow-btn-stark btn-lg" id="btn-hud-mic-talk">
                                 <i class="fa-solid fa-microphone"></i> ASK VOICE QUESTION
@@ -180,317 +155,119 @@
                 </div>
             </section>
 
-            <!-- TAB 1: DASHBOARD -->
-            <section class="tab-pane" id="tab-dashboard">
-                <!-- Metrics Grid -->
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-icon cyan">
-                            <i class="fa-solid fa-network-wired"></i>
-                        </div>
-                        <div class="metric-info">
-                            <span class="metric-label">Active Sync Sessions</span>
-                            <h3 class="metric-value" id="val-active-sessions">12</h3>
-                            <span class="metric-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +4 mobile nodes online</span>
-                        </div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-icon purple">
-                            <i class="fa-solid fa-bolt"></i>
-                        </div>
-                        <div class="metric-info">
-                            <span class="metric-label">Sync Packets / Sec</span>
-                            <h3 class="metric-value" id="val-sync-pps">148</h3>
-                            <span class="metric-trend positive"><i class="fa-solid fa-check"></i> Sub-100ms Latency</span>
-                        </div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-icon emerald">
-                            <i class="fa-solid fa-robot"></i>
-                        </div>
-                        <div class="metric-info">
-                            <span class="metric-label">Jarvis AI Tasks Queued</span>
-                            <h3 class="metric-value" id="val-queued-tasks">3</h3>
-                            <span class="metric-trend neutral"><i class="fa-solid fa-clock"></i> Auto-executing</span>
-                        </div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-icon amber">
-                            <i class="fa-solid fa-shield-halved"></i>
-                        </div>
-                        <div class="metric-info">
-                            <span class="metric-label">Security & Encryption</span>
-                            <h3 class="metric-value">AES-256</h3>
-                            <span class="metric-trend positive"><i class="fa-solid fa-lock"></i> E2EE Active</span>
-                        </div>
-                    </div>
+            <!-- ==========================================================================
+                 SECTION 2: LIVE OUTPUT & SYSTEM DATA (LOGS, NODES, TERMINAL, JSON)
+                 ========================================================================== -->
+            <section class="tab-pane" id="tab-section-live-output">
+                <!-- Section 2 Sub-Nav Controls -->
+                <div class="section2-subnav">
+                    <button class="subnav-btn active" data-subpane="subpane-dashboard"><i class="fa-solid fa-chart-pie"></i> Metrics & Logs</button>
+                    <button class="subnav-btn" data-subpane="subpane-nodes"><i class="fa-solid fa-mobile-screen"></i> Mobile Devices</button>
+                    <button class="subnav-btn" data-subpane="subpane-terminal"><i class="fa-solid fa-terminal"></i> AI Terminal</button>
+                    <button class="subnav-btn" data-subpane="subpane-json"><i class="fa-solid fa-code"></i> JSON Studio</button>
+                    <button class="subnav-btn" data-subpane="subpane-api"><i class="fa-solid fa-plug"></i> Mobile API</button>
                 </div>
 
-                <!-- Dashboard Split Grid -->
-                <div class="grid-2-col">
-                    <!-- Live Sync Feed Preview -->
+                <!-- Subpane 1: Dashboard Metrics & Sync Feed -->
+                <div class="subpane active" id="subpane-dashboard">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon cyan"><i class="fa-solid fa-network-wired"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-label">Active Sync Sessions</span>
+                                <h3 class="metric-value" id="val-active-sessions">12</h3>
+                                <span class="metric-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +4 mobile nodes online</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon purple"><i class="fa-solid fa-bolt"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-label">Sync Packets / Sec</span>
+                                <h3 class="metric-value" id="val-sync-pps">148</h3>
+                                <span class="metric-trend positive"><i class="fa-solid fa-check"></i> Sub-42ms Latency</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon emerald"><i class="fa-solid fa-robot"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-label">Queued Tasks</span>
+                                <h3 class="metric-value" id="val-queued-tasks">3</h3>
+                                <span class="metric-trend neutral"><i class="fa-solid fa-clock"></i> Auto-executing</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card glass-panel">
                         <div class="card-header">
                             <div class="card-title">
                                 <i class="fa-solid fa-tower-broadcast cyan-text"></i>
-                                <span>Recent Sync Operations (Mobile ↔ Web)</span>
+                                <span>Live Output Stream Log</span>
                             </div>
-                            <span class="live-indicator"><span class="pulse"></span> Stream Active</span>
                         </div>
                         <div class="card-body padding-0">
-                            <div class="sync-feed-list" id="dashboard-sync-feed">
-                                <!-- Dynamic Sync Items injected here -->
+                            <div class="sync-feed-list" id="dashboard-sync-feed"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subpane 2: Mobile Devices -->
+                <div class="subpane" id="subpane-nodes">
+                    <div class="nodes-grid" id="full-nodes-grid"></div>
+                </div>
+
+                <!-- Subpane 3: AI Terminal -->
+                <div class="subpane" id="subpane-terminal">
+                    <div class="card glass-panel terminal-wrapper">
+                        <div class="terminal-body" id="jarvis-terminal-output">
+                            <div class="terminal-line system-line">[SYSTEM OK] Jarvis Core initialized. All mobile sync channels open.</div>
+                        </div>
+                        <div class="terminal-input-bar">
+                            <span class="prompt-symbol">jarvis@admin:~#</span>
+                            <input type="text" id="terminal-input" placeholder="Type a question or command..." autocomplete="off">
+                            <button class="btn btn-primary" id="terminal-send-btn"><i class="fa-solid fa-paper-plane"></i> Exec</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subpane 4: JSON Studio -->
+                <div class="subpane" id="subpane-json">
+                    <div class="json-studio-grid">
+                        <div class="card glass-panel json-toolbar-card">
+                            <div class="card-body">
+                                <div class="form-group margin-b-16">
+                                    <label>Select JSON Schema:</label>
+                                    <select id="json-template-select" class="stark-select">
+                                        <option value="master_project" selected>🌟 Master Jarvis System JSON (jarvis_system_project.json)</option>
+                                        <option value="system_state">Jarvis System State JSON</option>
+                                        <option value="mobile_telemetry">Mobile Devices JSON</option>
+                                    </select>
+                                </div>
+                                <div class="json-action-btns">
+                                    <button class="btn btn-secondary btn-full" id="btn-format-json"><i class="fa-solid fa-code"></i> Format JSON</button>
+                                    <button class="btn btn-secondary btn-full" id="btn-minify-json"><i class="fa-solid fa-compress"></i> Minify JSON</button>
+                                    <button class="btn btn-primary btn-full" id="btn-download-json"><i class="fa-solid fa-download"></i> Download .json</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card glass-panel json-editor-card">
+                            <div class="card-body padding-0">
+                                <textarea id="json-code-textarea" class="json-textarea" spellcheck="false"></textarea>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Connected Devices Quick Control -->
+                <!-- Subpane 5: Mobile API Explorer -->
+                <div class="subpane" id="subpane-api">
                     <div class="card glass-panel">
                         <div class="card-header">
-                            <div class="card-title">
-                                <i class="fa-solid fa-mobile-screen purple-text"></i>
-                                <span>Mobile Devices Status</span>
-                            </div>
-                            <button class="btn-text" id="view-all-nodes-btn">View All</button>
+                            <div class="card-title"><i class="fa-solid fa-plug emerald-text"></i><span>Mobile REST API Explorer</span></div>
                         </div>
                         <div class="card-body">
-                            <div class="device-quick-list" id="quick-device-list">
-                                <!-- Dynamic Mobile Node items injected here -->
+                            <button class="btn btn-secondary btn-test-api" data-url="/api/v1/mobile/devices" data-method="GET">Test GET Devices API</button>
+                            <div class="api-output-wrapper margin-top-24">
+                                <pre id="mobile-api-response-output" class="api-response-box">// API output displays here...</pre>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 2: LIVE SYNC STREAM -->
-            <section class="tab-pane" id="tab-sync-monitor">
-                <div class="card glass-panel">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fa-solid fa-arrows-rotate cyan-text"></i>
-                            <span>Real-Time WebSocket Sync Protocol Monitor</span>
-                        </div>
-                        <div class="filter-controls">
-                            <button class="filter-btn active" data-filter="all">All Events</button>
-                            <button class="filter-btn" data-filter="mobile">Mobile Initiated</button>
-                            <button class="filter-btn" data-filter="web">Admin Initiated</button>
-                            <button class="filter-btn" data-filter="ai">AI System</button>
-                        </div>
-                    </div>
-                    <div class="card-body padding-0">
-                        <div class="terminal-sync-stream" id="full-sync-stream">
-                            <!-- Injected live events -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 3: MOBILE NODES -->
-            <section class="tab-pane" id="tab-mobile-nodes">
-                <div class="section-toolbar">
-                    <h2>Registered Mobile & Web Nodes</h2>
-                    <div class="search-box">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="node-search" placeholder="Search devices by name, platform or IP...">
-                    </div>
-                </div>
-
-                <div class="nodes-grid" id="full-nodes-grid">
-                    <!-- Dynamic Node Cards Injected Here -->
-                </div>
-            </section>
-
-            <!-- TAB 4: AI TERMINAL & EXECUTION -->
-            <section class="tab-pane" id="tab-terminal">
-                <div class="card glass-panel terminal-wrapper">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fa-solid fa-terminal emerald-text"></i>
-                            <span>Jarvis Core Command & Sync Execution Terminal</span>
-                        </div>
-                        <span class="target-node-tag"><i class="fa-solid fa-mobile-screen"></i> Target: Broadcast All Nodes</span>
-                    </div>
-                    <div class="terminal-body" id="jarvis-terminal-output">
-                        <div class="terminal-line system-line">[SYSTEM OK] Jarvis Orchestrator v2.4 initialized. All mobile sync channels open.</div>
-                        <div class="terminal-line help-line">Type 'help' or click suggestions below to test commands.</div>
-                    </div>
-                    <div class="terminal-suggestions">
-                        <button class="suggest-chip" data-cmd="sync --force">sync --force</button>
-                        <button class="suggest-chip" data-cmd="device list">device list</button>
-                        <button class="suggest-chip" data-cmd="trigger-mobile --notify 'Meeting in 10 mins'">trigger-mobile notify</button>
-                        <button class="suggest-chip" data-cmd="jarvis --status">jarvis --status</button>
-                    </div>
-                    <div class="terminal-input-bar">
-                        <span class="prompt-symbol">jarvis@admin:~#</span>
-                        <input type="text" id="terminal-input" placeholder="Type or click Mic for voice command..." autocomplete="off">
-                        <button class="btn btn-secondary mic-btn" id="terminal-mic-btn" title="Click to Speak Voice Command">
-                            <i class="fa-solid fa-microphone"></i>
-                        </button>
-                        <button class="btn btn-primary" id="terminal-send-btn">
-                            <i class="fa-solid fa-paper-plane"></i> Exec
-                        </button>
-                    </div>
-                    <div class="voice-status-bar" id="voice-status-bar" style="display: none;">
-                        <span class="voice-wave"><i class="fa-solid fa-waveform"></i></span>
-                        <span id="voice-status-text">Listening for Jarvis command... Speak now!</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 5: SRS DOCUMENT VIEWER -->
-            <section class="tab-pane" id="tab-srs-viewer">
-                <div class="srs-layout">
-                    <div class="srs-sidebar card glass-panel">
-                        <h3>SRS Table of Contents</h3>
-                        <ul class="srs-toc" id="srs-toc-list">
-                            <li><a href="#srs-sec-1" class="active">1. Introduction & Purpose</a></li>
-                            <li><a href="#srs-sec-2">2. Overall System Description</a></li>
-                            <li><a href="#srs-sec-3">3. Functional Requirements</a></li>
-                            <li><a href="#srs-sec-4">4. Non-Functional Requirements</a></li>
-                            <li><a href="#srs-sec-5">5. Architecture & Data Schemas</a></li>
-                        </ul>
-                        <div class="srs-download-box">
-                            <button class="btn btn-secondary btn-full" id="btn-export-srs">
-                                <i class="fa-solid fa-file-arrow-down"></i> Export SRS Document
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="srs-content-area card glass-panel">
-                        <div id="srs-render-target">
-                            <!-- Dynamic SRS markdown reader content injected here -->
-                        </div>
-            <!-- TAB 6: JSON STUDIO & SCHEMAS -->
-            <section class="tab-pane" id="tab-json-studio">
-                <div class="json-studio-grid">
-                    <!-- Left Column: Template Selector & Controls -->
-                    <div class="card glass-panel json-toolbar-card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fa-solid fa-cube amber-text"></i>
-                                <span>Jarvis JSON Presets</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group margin-b-16">
-                                <label>Load JSON Schema Template:</label>
-                                <select id="json-template-select" class="stark-select">
-                                    <option value="master_project" selected>🌟 Master Jarvis System JSON Project (jarvis_system_project.json)</option>
-                                    <option value="system_state">Jarvis System State JSON</option>
-                                    <option value="mobile_telemetry">Mobile Devices Telemetry JSON</option>
-                                    <option value="srs_summary">SRS Document Data JSON</option>
-                                    <option value="api_config">API & Environment Config JSON</option>
-                                </select>
-                            </div>
-
-                            <div class="json-action-btns">
-                                <button class="btn btn-secondary btn-full" id="btn-format-json">
-                                    <i class="fa-solid fa-code"></i> Format JSON
-                                </button>
-                                <button class="btn btn-secondary btn-full" id="btn-minify-json">
-                                    <i class="fa-solid fa-compress"></i> Minify JSON
-                                </button>
-                                <button class="btn btn-secondary btn-full" id="btn-validate-json">
-                                    <i class="fa-solid fa-check-double"></i> Validate JSON
-                                </button>
-                                <button class="btn btn-primary btn-full" id="btn-download-json">
-                                    <i class="fa-solid fa-download"></i> Download .json
-                                </button>
-                            </div>
-
-                            <div class="json-status-box" id="json-validation-status">
-                                <i class="fa-solid fa-circle-check emerald-text"></i> Valid JSON Payload
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column: Interactive Editor & Tree Viewer -->
-                    <div class="card glass-panel json-editor-card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fa-solid fa-terminal cyan-text"></i>
-                                <span>Interactive JSON Code Editor</span>
-                            </div>
-                            <div class="editor-mode-toggle">
-                                <button class="mode-btn active" id="view-mode-code"><i class="fa-solid fa-code"></i> Code</button>
-                                <button class="mode-btn" id="view-mode-tree"><i class="fa-solid fa-diagram-project"></i> Tree View</button>
-                            </div>
-                        </div>
-                        <div class="card-body padding-0">
-                            <!-- Raw Code View -->
-                            <textarea id="json-code-textarea" class="json-textarea" spellcheck="false"></textarea>
-                            <!-- Visual Tree View -->
-                            <div id="json-tree-container" class="json-tree-view" style="display: none;"></div>
-                        </div>
-                    </div>
-            <!-- TAB 7: MOBILE REST & WEBSOCKET API -->
-            <section class="tab-pane" id="tab-mobile-api">
-                <div class="card glass-panel">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fa-solid fa-plug emerald-text"></i>
-                            <span>Jarvis Mobile REST & WebSocket API Gateway</span>
-                        </div>
-                        <span class="badge pulse-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald);">http://localhost:8080/api/v1/mobile</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="api-endpoints-grid">
-                            <!-- Endpoint 1: Pair Mobile Device -->
-                            <div class="api-endpoint-card">
-                                <div class="endpoint-header">
-                                    <span class="method-badge post">POST</span>
-                                    <code class="endpoint-path">/api/v1/mobile/pair</code>
-                                </div>
-                                <p class="endpoint-desc">Registers and pairs an Android or iOS device node with authentication tokens.</p>
-                                <button class="btn btn-secondary btn-full btn-test-api" data-url="/api/v1/mobile/pair" data-method="POST">
-                                    <i class="fa-solid fa-play"></i> Test Pair Mobile Device
-                                </button>
-                            </div>
-
-                            <!-- Endpoint 2: Sync Local Mutations -->
-                            <div class="api-endpoint-card">
-                                <div class="endpoint-header">
-                                    <span class="method-badge post">POST</span>
-                                    <code class="endpoint-path">/api/v1/mobile/sync</code>
-                                </div>
-                                <p class="endpoint-desc">Bi-directional state sync endpoint for pushing mobile mutations and receiving task queues.</p>
-                                <button class="btn btn-secondary btn-full btn-test-api" data-url="/api/v1/mobile/sync" data-method="POST">
-                                    <i class="fa-solid fa-play"></i> Test Mobile Sync
-                                </button>
-                            </div>
-
-                            <!-- Endpoint 3: Voice & AI Query -->
-                            <div class="api-endpoint-card">
-                                <div class="endpoint-header">
-                                    <span class="method-badge post">POST</span>
-                                    <code class="endpoint-path">/api/v1/mobile/voice-query</code>
-                                </div>
-                                <p class="endpoint-desc">Routes mobile voice speech or text to Google Gemini & Claude API and returns AI response.</p>
-                                <button class="btn btn-secondary btn-full btn-test-api" data-url="/api/v1/mobile/voice-query" data-method="POST">
-                                    <i class="fa-solid fa-play"></i> Test Mobile AI Query
-                                </button>
-                            </div>
-
-                            <!-- Endpoint 4: Get Registered Mobile Nodes -->
-                            <div class="api-endpoint-card">
-                                <div class="endpoint-header">
-                                    <span class="method-badge get">GET</span>
-                                    <code class="endpoint-path">/api/v1/mobile/devices</code>
-                                </div>
-                                <p class="endpoint-desc">Fetches live list of connected mobile devices, battery levels, IPs, and telemetry.</p>
-                                <button class="btn btn-secondary btn-full btn-test-api" data-url="/api/v1/mobile/devices" data-method="GET">
-                                    <i class="fa-solid fa-play"></i> Test Get Devices
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Live API Output Log Console -->
-                        <div class="api-output-wrapper margin-top-24">
-                            <h4><i class="fa-solid fa-terminal cyan-text"></i> Live API Response Console</h4>
-                            <pre id="mobile-api-response-output" class="api-response-box">// Click any "Test API" button above to send a live request to the mobile server...</pre>
                         </div>
                     </div>
                 </div>

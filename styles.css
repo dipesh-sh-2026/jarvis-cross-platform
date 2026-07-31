@@ -1484,6 +1484,58 @@ body {
     box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
 }
 
+/* ==========================================================================
+   SECTION 2 SUBNAV & SUBPANE STYLES
+   ========================================================================== */
+
+.section2-subnav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    background: rgba(12, 17, 29, 0.6);
+    padding: 6px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-glass);
+    overflow-x: auto;
+}
+
+.subnav-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.subnav-btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.subnav-btn.active {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-emerald);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.subpane {
+    display: none;
+}
+
+.subpane.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
 /* Modal */
 .modal-overlay {
     position: fixed;
